@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sıla'nın Yerel Eğlence Dünyası 🚀</title>
+    <style>
+        /* Base64 encoded font */
+        @font-face {
+            font-family: 'ComicFun';
+            src: url('data:font/woff2;base64,d09GMgABAAAAA...') format('woff2');
+        }
+
+        :root {
+            --neon-pink: #ff6bff;
+            --electric-blue: #00f7ff;
+            --golden-yellow: #ffd700;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'ComicFun', cursive;
+            color: #2d3436;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background: rgba(255,255,255,0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .game-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .balloon {
+            font-size: 3rem;
+            cursor: pointer;
+            animation: float 3s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: #eee;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-pink), var(--electric-blue));
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        button {
+            background: var(--golden-yellow);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 15px;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confettiFall 3s linear;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(720deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎪 Sıla'nın Yerel Eğlencesi</h1>
+            <p>Boyu Mini, Eğlencesi Mega! 🚀</p>
+        </div>
+
+        <div class="game-section">
+            <div class="game-card">
+                <h2>🎈 Balon Patlat</h2>
+                <div id="balloons"></div>
+                <p>Puan: <span id="score">0</span></p>
+            </div>
+
+            <div class="game-card">
+                <h2>🦒 Zürafa Yarışı</h2>
+                <div class="progress-bar">
+                    <div class="progress" id="race-progress"></div>
+                </div>
+                <button onclick="startRace()">Başlat!</button>
+            </div>
+
+            <div class="game-card">
+                <h2>😂 Şakalar</h2>
+                <p id="joke">Şaka yükleniyor...</p>
+                <button onclick="newJoke()">Yeni Şaka</button>
+            </div>
+        </div>
+
+        <div class="music-player">
+            <audio id="music" controls loop>
+                <source src="data:audio/mpeg;base64,//uQxAAAAAAAAAAAAA..." type="audio/mpeg">
+            </audio>
+        </div>
+    </div>
+
+    <script>
+        // Oyun Değişkenleri
+        let score = 0;
+        let raceInterval;
+        const jokes = [
+            "Sıla o kadar hızlı ki... Gölgesi yetişemiyor!",
+            "Sıla fotoğraf çektirirken: 'Zoom yapma!'",
+            "Sıla'nın içeceği: Kısa Latte!",
+            "Sıla uçakta pilotun kulağına oturur!"
+        ];
+
+        // Balon Oluşturma
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            balloon.textContent = '🎈';
+            balloon.onclick = () => {
+                score += 10;
+                document.getElementById('score').textContent = score;
+                balloon.remove();
+                createConfetti();
+            };
+            document.getElementById('balloons').appendChild(balloon);
+        }
+
+        // Zürafa Yarışı
+        function startRace() {
+            clearInterval(raceInterval);
+            const progress = document.getElementById('race-progress');
+            let width = 0;
+            
+            raceInterval = setInterval(() => {
+                width += Math.random() * 3;
+                progress.style.width = width + '%';
+                
+                if(width >= 100) {
+                    clearInterval(raceInterval);
+                    alert('🏁 Kazandın!');
+                }
+            }, 100);
+        }
+
+        // Şaka Sistemi
+        function newJoke() {
+            const jokeElement = document.getElementById('joke');
+            jokeElement.textContent = jokes[Math.floor(Math.random() * jokes.length)];
+        }
+
+        // Konfetti Efekti
+        function createConfetti() {
+            for(let i = 0; i < 20; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // Oyun Başlatıcı
+        setInterval(createBalloon, 1500);
+        newJoke();
+        document.getElementById('music').play();
+    </script>
+</body>
+</html>
